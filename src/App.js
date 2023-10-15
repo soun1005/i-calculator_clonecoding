@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 
 function App() {
   const [input, setInput] = useState(0);
-  const [curState, setCurState] = useState('');
-  const [prevState, setPrevState] = useState('');
+  const [curState, setCurState] = useState(0);
+  const [prevState, setPrevState] = useState(0);
   const [operator, setOperator] = useState(null);
   const [total, setTotal] = useState(false);
 
@@ -16,6 +16,7 @@ function App() {
    *******************/
   const displayNum = (e) => {
     const num = e.target.innerText;
+    console.log(typeof num);
 
     // when , is already displayed, don't add up anymore
     if (num === ',' && input.includes(',')) return;
@@ -41,13 +42,15 @@ function App() {
     // if (curState === '') return;
 
     // when prevState contains something => which means operator is clicked second time
-    if (prevState !== '') {
+    if (prevState !== 0) {
       // calculate and save result to prevState
+      setOperator(targetText);
       equals();
       // when it's first operator being clicked
-    } else {
+    } else if (curState !== 0) {
+      // here is a problem!!!!!! ->  when operator is secondly clicked -> because curState is empty -> prevState becomes empty
       setPrevState(curState);
-      setCurState('');
+      setCurState(0);
     }
   };
 
@@ -58,24 +61,27 @@ function App() {
    *******************/
   const equals = (e) => {
     // prevState and curState into number from string
-    const prevNum = parseFloat(prevState.replace(',', '.'));
-    const curNum = parseFloat(curState.replace(',', '.'));
+    const prevNum = parseFloat(prevState);
+    const curNum = parseFloat(curState);
 
     let res;
 
     switch (operator) {
       case '/':
-        res = String(prevNum / curState);
+        res = String(prevNum / curNum);
+        // res = parseFloat(prevState) / parseFloat(curState);
         break;
       case 'X':
-        res = String(prevNum * curState);
+        res = String(prevNum * curNum);
+        // res = parseFloat(prevState) * parseFloat(curState);
         break;
       case '-':
-        res = String(prevNum - curState);
+        res = String(prevNum - curNum);
+        // res = parseFloat(prevState) - parseFloat(curState);
         break;
       case '+':
-        // setInput(prevState + curState); -> this returns 3+3 = 33
         res = String(prevNum + curNum);
+        // res = parseFloat(prevState) + parseFloat(curState);
         break;
       default:
         console.log('default');
@@ -83,17 +89,17 @@ function App() {
 
     // console.log(res);
     setPrevState(res);
-    setCurState('');
+    setCurState(0);
     setInput(res);
     setTotal(true);
+    // setOperator(null);
 
     //
     if (prevState === '' && operator === null) return;
     // when equals is clicked -> empty operator
     // console.log('HELLo');
-    setOperator(null);
-    setCurState('');
-    // return setInput(prevState + operator + curState);
+    // setOperator(null);
+    setCurState(0);
   };
 
   /*******************
@@ -102,15 +108,16 @@ function App() {
    *******************
    *******************/
   const reset = () => {
-    setCurState('');
-    setPrevState('');
+    setCurState(0);
+    setPrevState(0);
     setInput(0);
     setOperator(null);
   };
 
   // console.log('input:', input);
-  console.log('curState:', curState);
-  console.log('prevState:', prevState);
+  console.log('curState type:', typeof curState);
+  console.log('prevState type:', typeof prevState);
+  console.log('operator', operator);
 
   return (
     <div className="container">
