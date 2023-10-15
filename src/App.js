@@ -21,7 +21,7 @@ function App() {
     // when , is already displayed, don't add up anymore
     if (num === ',' && input.includes(',')) return;
 
-    curState === '' ? setCurState(num) : setCurState((prev) => prev + num);
+    curState === 0 ? setCurState(num) : setCurState((prev) => prev + num);
   };
 
   // input = curState (when curState changes input is updated)
@@ -52,6 +52,15 @@ function App() {
       setPrevState(curState);
       setCurState(0);
     }
+  };
+
+  const positiveNegative = (e) => {
+    // positive => negative
+    // negative => positive
+  };
+
+  const percentage = (e) => {
+    // percentage
   };
 
   /*******************
@@ -128,10 +137,10 @@ function App() {
         <div className="btn" onClick={reset}>
           AC
         </div>
-        <div className="btn" onClick={operators}>
+        <div className="btn" onClick={positiveNegative}>
           +/-
         </div>
-        <div className="btn" onClick={operators}>
+        <div className="btn" onClick={percentage}>
           %
         </div>
         <div className="btn orange" onClick={operators}>
