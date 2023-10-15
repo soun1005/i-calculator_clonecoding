@@ -4,9 +4,10 @@ import { useState, useEffect } from 'react';
 
 function App() {
   const [input, setInput] = useState(0);
-  const [curState, setCurState] = useState(0);
-  const [prevState, setPrevState] = useState(0);
-  const [operator, setOperator] = useState([]);
+  const [curState, setCurState] = useState('');
+  const [prevState, setPrevState] = useState('');
+  const [operator, setOperator] = useState(null);
+  const [total, setTotal] = useState(false);
 
   /*******************
    *******************
@@ -19,109 +20,79 @@ function App() {
     // when , is already displayed, don't add up anymore
     if (num === ',' && input.includes(',')) return;
 
-    curState ? setCurState((prev) => prev + num) : setCurState(num);
+    curState === '' ? setCurState(num) : setCurState((prev) => prev + num);
   };
 
   // input = curState (when curState changes input is updated)
   useEffect(() => {
-    setInput(curState);
+    curState && setInput(curState);
   }, [curState]);
 
   /******************
   *******************
-  Calculate 
+  Calculate
   *******************
   *******************/
   // plus, minus, multiply, divide
-  const calcul = (e) => {
+  const operators = (e) => {
     const targetText = e.target.innerText;
+    setOperator(targetText);
 
-    // set operator as chosen operator
-    // if operator is empty
+    // if (curState === '') return;
 
-    // 1. 오퍼레이터에 아무것도 없을때
-    // 클릭한값을 오퍼레이터로 등록하기
-    if (operator.length === 0) {
-      setOperator([...targetText]);
-      // curState를 prev로 등록하기
+    // when prevState contains something => which means operator is clicked second time
+    if (prevState !== '') {
+      // calculate and save result to prevState
+      equals();
+      // when it's first operator being clicked
+    } else {
       setPrevState(curState);
-      setCurState(0);
-    }
-
-    // 2. 이미 오퍼레이터가 있을경우 => 계산해서 결과를 curState로 만들기
-    if (operator.length > 0 && prevState && curState) {
-      // 1. add operator as operator[0] 첫번째 순서가 되게 배열에 넣기
-      setOperator([...targetText, ...operator]);
-
-      // 2. get cur, prev numbers
-      const prevNum = parseFloat(prevState.replace(',', '.'));
-      const curNum = parseFloat(curState.replace(',', '.'));
-
-      // Perform the calculation based on the operator
-      let result;
-
-      switch (operator[0]) {
-        case '+':
-          result = prevNum + curNum;
-          break;
-        case '-':
-          result = prevNum - curNum;
-          break;
-        case 'X':
-          result = prevNum * curNum;
-          break;
-        case '/':
-          if (curNum === 0) {
-            return;
-          }
-          result = prevNum / curNum;
-          break;
-        default:
-          alert('Invalid operator');
-          return;
-      }
-
-      // Update the previous state with the result with two first numbers
-      setCurState(result);
+      setCurState('');
     }
   };
 
   /*******************
    ********************
-   Equals 
+   Equals
    *******************
    *******************/
   const equals = (e) => {
-    // const target = e.target.innerText;
-    // parseFloat turns string to number
+    // prevState and curState into number from string
+    const prevNum = parseFloat(prevState.replace(',', '.'));
+    const curNum = parseFloat(curState.replace(',', '.'));
 
-    if (prevState && curState) {
-      const prevNum = parseFloat(prevState.replace(',', '.'));
-      const curNum = parseFloat(curState.replace(',', '.'));
-      switch (operator[0]) {
-        case '/':
-          setCurState(prevState / curState);
-          break;
-        case 'X':
-          setCurState(prevState * curState);
-          break;
-        case '-':
-          setCurState(prevState - curState);
-          break;
-        case '+':
-          // setInput(prevState + curState); -> this returns 3+3 = 33
-          const result = parseFloat(prevNum) + parseFloat(curNum);
-          setCurState(result.toString());
-          break;
-        default:
-          console.log('default');
-      }
+    let res;
+
+    switch (operator) {
+      case '/':
+        res = String(prevNum / curState);
+        break;
+      case 'X':
+        res = String(prevNum * curState);
+        break;
+      case '-':
+        res = String(prevNum - curState);
+        break;
+      case '+':
+        // setInput(prevState + curState); -> this returns 3+3 = 33
+        res = String(prevNum + curNum);
+        break;
+      default:
+        console.log('default');
     }
 
-    if (prevState === 0 && operator === null) return;
+    // console.log(res);
+    setPrevState(res);
+    setCurState('');
+    setInput(res);
+    setTotal(true);
+
+    //
+    if (prevState === '' && operator === null) return;
     // when equals is clicked -> empty operator
-    setOperator([]);
-    // setCurState(0);
+    // console.log('HELLo');
+    setOperator(null);
+    setCurState('');
     // return setInput(prevState + operator + curState);
   };
 
@@ -131,31 +102,32 @@ function App() {
    *******************
    *******************/
   const reset = () => {
-    setCurState(0);
-    setOperator([]);
+    setCurState('');
+    setPrevState('');
+    setInput(0);
+    setOperator(null);
   };
 
-  console.log('input:', input);
+  // console.log('input:', input);
   console.log('curState:', curState);
+  console.log('prevState:', prevState);
 
   return (
     <div className="container">
       <div className="wrap">
         <div className="outputScreen">
-          <span className="output">
-            {input !== '' || input === '0' ? curState : prevState}
-          </span>
+          <span className="output">{input}</span>
         </div>
         <div className="btn" onClick={reset}>
           AC
         </div>
-        <div className="btn" onClick={calcul}>
+        <div className="btn" onClick={operators}>
           +/-
         </div>
-        <div className="btn" onClick={calcul}>
+        <div className="btn" onClick={operators}>
           %
         </div>
-        <div className="btn orange" onClick={calcul}>
+        <div className="btn orange" onClick={operators}>
           /
         </div>
 
@@ -168,7 +140,7 @@ function App() {
         <div className="btn num" onClick={displayNum}>
           9
         </div>
-        <div className="btn orange" onClick={calcul}>
+        <div className="btn orange" onClick={operators}>
           X
         </div>
 
@@ -181,7 +153,7 @@ function App() {
         <div className="btn num" onClick={displayNum}>
           6
         </div>
-        <div className="btn orange" onClick={calcul}>
+        <div className="btn orange" onClick={operators}>
           -
         </div>
 
@@ -194,7 +166,7 @@ function App() {
         <div className="btn num" onClick={displayNum}>
           3
         </div>
-        <div className="btn orange" onClick={calcul}>
+        <div className="btn orange" onClick={operators}>
           +
         </div>
 
