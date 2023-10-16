@@ -7,7 +7,6 @@ function App() {
   const [curState, setCurState] = useState(0);
   const [prevState, setPrevState] = useState(0);
   const [operator, setOperator] = useState(null);
-  // const [total, setTotal] = useState(false);
 
   /*******************************
    ***********Display*************
@@ -34,8 +33,6 @@ function App() {
   const operators = (e) => {
     const targetText = e.target.innerText;
     setOperator(targetText);
-    console.log(operator);
-    // if (curState === '') return;
 
     // when prevState contains something => which means operator is clicked second time
     if (prevState !== 0) {
@@ -63,30 +60,24 @@ function App() {
     if (operator === null) {
       if (input > 0) {
         setCurState(parseFloat(input * -1));
-        console.log('hi');
       } else {
         setCurState(parseFloat(Math.abs(input)));
-        console.log('hi');
       }
       // when operator is clicked = second number
     } else if (operator !== null && prevState !== 0 && curState !== 0) {
       if (input > 0) {
         setCurState(parseFloat(input * -1));
-        console.log('hello');
       } else {
         setCurState(parseFloat(Math.abs(input)));
-        console.log('hello');
       }
       // when there is only prevState value
     } else if (operator !== null && prevState !== 0 && curState === 0) {
       if (input > 0) {
         setPrevState(parseFloat(input * -1));
         setInput(parseFloat(input * -1));
-        console.log('ssibal');
       } else {
         setPrevState(parseFloat(Math.abs(input)));
         setInput(parseFloat(Math.abs(input)));
-        console.log('ssibal');
       }
     } else if (prevState !== 0 && operator !== null && curState === 0) {
       if (input > 0) {
