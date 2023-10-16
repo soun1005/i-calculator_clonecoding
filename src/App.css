@@ -25,13 +25,11 @@ body {
 .outputScreen {
   height: 100%;
   width: 100%;
-  /* background-color: red; */
   grid-area: 1 / 1 / 2 / 5;
   aspect-ratio: 4/1;
   display: flex;
   align-items: center;
-  justify-content: end;
-  /* overflow: hidden; */
+  justify-content: flex-end;
 }
 .output {
   margin: 0 10px;
@@ -50,7 +48,12 @@ body {
 }
 
 .btn:hover {
-  background-color: red;
+  background-color: rgb(156, 156, 156);
+}
+
+.orange:hover {
+  background-color: antiquewhite;
+  color: orange;
 }
 
 .zero {
@@ -64,7 +67,6 @@ body {
 .num {
   background-color: rgb(70, 70, 70);
   color: rgb(239, 239, 239);
-  /* font-size: 250%; */
 }
 
 .orange {

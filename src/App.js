@@ -7,38 +7,34 @@ function App() {
   const [curState, setCurState] = useState(0);
   const [prevState, setPrevState] = useState(0);
   const [operator, setOperator] = useState(null);
-  const [total, setTotal] = useState(false);
+  // const [total, setTotal] = useState(false);
 
-  /*******************
-   *******************
-   display
-   *******************
-   *******************/
+  /*******************************
+   ***********Display*************
+   *******************************/
   const displayNum = (e) => {
     const num = e.target.innerText;
-    console.log(typeof num);
 
-    // when , is already displayed, don't add up anymore
+    // when comma (,) is already displayed, don't add up anymore
     if (num === ',' && input.includes(',')) return;
 
     curState === 0 ? setCurState(num) : setCurState((prev) => prev + num);
   };
 
-  // input = curState (when curState changes input is updated)
+  // input = curState (when curState changes and there is value, input is updated)
   useEffect(() => {
     curState && setInput(curState);
   }, [curState]);
 
-  /******************
-  *******************
-  Calculate
-  *******************
-  *******************/
+  /*******************************
+   ***********Calculate***********
+   *******************************/
+
   // plus, minus, multiply, divide
   const operators = (e) => {
     const targetText = e.target.innerText;
     setOperator(targetText);
-
+    console.log(operator);
     // if (curState === '') return;
 
     // when prevState contains something => which means operator is clicked second time
@@ -53,21 +49,70 @@ function App() {
       setCurState(0);
     }
   };
-
+  /*******************************
+   ********Positive/negative******
+   *******************************/
   const positiveNegative = (e) => {
-    // positive => negative
-    // negative => positive
+    // 1. Input should be bigger than 0
+    // 2. if the value is curState -> stay as curState
+    // 3. if the value is prevState -> stay as prevState
+    // when the value is bigger than 0 -> make it negative
+    // else -> make it positive
+
+    // when no operator is clicked = first number
+    if (operator === null) {
+      if (input > 0) {
+        setCurState(parseFloat(input * -1));
+        console.log('hi');
+      } else {
+        setCurState(parseFloat(Math.abs(input)));
+        console.log('hi');
+      }
+      // when operator is clicked = second number
+    } else if (operator !== null && prevState !== 0 && curState !== 0) {
+      if (input > 0) {
+        setCurState(parseFloat(input * -1));
+        console.log('hello');
+      } else {
+        setCurState(parseFloat(Math.abs(input)));
+        console.log('hello');
+      }
+      // when there is only prevState value
+    } else if (operator !== null && prevState !== 0 && curState === 0) {
+      if (input > 0) {
+        setPrevState(parseFloat(input * -1));
+        setInput(parseFloat(input * -1));
+        console.log('ssibal');
+      } else {
+        setPrevState(parseFloat(Math.abs(input)));
+        setInput(parseFloat(Math.abs(input)));
+        console.log('ssibal');
+      }
+    } else if (prevState !== 0 && operator !== null && curState === 0) {
+      if (input > 0) {
+        setPrevState(parseFloat(input * -1));
+      } else {
+        setPrevState(parseFloat(Math.abs(input)));
+      }
+    }
   };
 
+  /*******************************
+   ***********Percentage**********
+   *******************************/
   const percentage = (e) => {
-    // percentage
+    if (input) {
+      setCurState(curState / 100);
+    }
+    if (prevState !== 0 && curState === 0) {
+      setPrevState(input / 100);
+      setInput(input / 100);
+    }
   };
 
-  /*******************
-   ********************
-   Equals
-   *******************
-   *******************/
+  /*******************************
+   *************Equals************
+   *******************************/
   const equals = (e) => {
     // prevState and curState into number from string
     const prevNum = parseFloat(prevState);
@@ -77,56 +122,40 @@ function App() {
 
     switch (operator) {
       case '/':
-        res = String(prevNum / curNum);
-        // res = parseFloat(prevState) / parseFloat(curState);
+        res = prevNum / curNum;
         break;
       case 'X':
-        res = String(prevNum * curNum);
-        // res = parseFloat(prevState) * parseFloat(curState);
+        res = prevNum * curNum;
         break;
       case '-':
-        res = String(prevNum - curNum);
-        // res = parseFloat(prevState) - parseFloat(curState);
+        res = prevNum - curNum;
         break;
       case '+':
-        res = String(prevNum + curNum);
-        // res = parseFloat(prevState) + parseFloat(curState);
+        res = prevNum + curNum;
         break;
       default:
         console.log('default');
     }
 
-    // console.log(res);
     setPrevState(res);
     setCurState(0);
     setInput(res);
-    setTotal(true);
-    // setOperator(null);
 
     //
     if (prevState === '' && operator === null) return;
-    // when equals is clicked -> empty operator
-    // console.log('HELLo');
-    // setOperator(null);
+
     setCurState(0);
   };
 
-  /*******************
-   ********************
-   Reset 
-   *******************
-   *******************/
+  /*******************************
+   *************Reset*************
+   *******************************/
   const reset = () => {
     setCurState(0);
     setPrevState(0);
     setInput(0);
     setOperator(null);
   };
-
-  // console.log('input:', input);
-  console.log('curState type:', typeof curState);
-  console.log('prevState type:', typeof prevState);
-  console.log('operator', operator);
 
   return (
     <div className="container">
