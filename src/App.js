@@ -1,5 +1,6 @@
 import './App.css';
 import './normalize.css';
+import './breakpoints.css';
 import { useState, useEffect } from 'react';
 
 function App() {
@@ -35,12 +36,12 @@ function App() {
     setOperator(targetText);
 
     // when prevState contains something => which means operator is clicked second time
-    if (prevState !== 0) {
+    if (prevState !== 0 && operator && curState !== 0) {
       // calculate and save result to prevState
       setOperator(targetText);
       equals();
       // when it's first operator being clicked
-    } else if (curState !== 0) {
+    } else if (curState !== 0 && prevState === 0) {
       // here is a problem!!!!!! ->  when operator is secondly clicked -> because curState is empty -> prevState becomes empty
       setPrevState(curState);
       setCurState(0);
@@ -72,18 +73,12 @@ function App() {
       }
       // when there is only prevState value
     } else if (operator !== null && prevState !== 0 && curState === 0) {
-      if (input > 0) {
+      if (prevState > 0) {
         setPrevState(parseFloat(input * -1));
         setInput(parseFloat(input * -1));
       } else {
         setPrevState(parseFloat(Math.abs(input)));
         setInput(parseFloat(Math.abs(input)));
-      }
-    } else if (prevState !== 0 && operator !== null && curState === 0) {
-      if (input > 0) {
-        setPrevState(parseFloat(input * -1));
-      } else {
-        setPrevState(parseFloat(Math.abs(input)));
       }
     }
   };
@@ -133,7 +128,7 @@ function App() {
     setInput(res);
 
     //
-    if (prevState === '' && operator === null) return;
+    if (prevState === 0 && operator === null) return;
 
     setCurState(0);
   };
