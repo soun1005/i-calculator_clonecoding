@@ -2,12 +2,14 @@
   body {
     background-color: rgb(17, 17, 17);
   }
+  .container {
+    align-items: flex-end;
+  }
   .wrap {
+    /* height: 65vh; */
     min-width: 87%;
     gap: 2%;
-  }
-  .outputScreen {
-    margin: 15% 0;
+    padding-bottom: 2rem;
   }
   .btn {
     font-size: 1.2rem;
