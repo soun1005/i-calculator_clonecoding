@@ -1,0 +1,15 @@
+@media (max-width: 760px) {
+  body {
+    background-color: rgb(17, 17, 17);
+  }
+  .wrap {
+    min-width: 87%;
+    gap: 3%;
+  }
+  .outputScreen {
+    margin: 20% 0;
+  }
+  .btn {
+    font-size: 1.2rem;
+  }
+}

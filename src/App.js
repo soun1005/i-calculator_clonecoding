@@ -108,7 +108,13 @@ function App() {
 
     switch (operator) {
       case '/':
-        res = prevNum / curNum;
+        if (curNum === 0) {
+          alert('cannot be divided by 0');
+          setCurState(0);
+          return;
+        }
+        const firstVal = prevNum / curNum;
+        res = firstVal.toFixed(10);
         break;
       case 'X':
         res = prevNum * curNum;
