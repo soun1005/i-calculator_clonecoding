@@ -15,9 +15,12 @@ function App() {
   const displayNum = (e) => {
     const num = e.target.innerText;
     // if (input.length > 10) return;
+    console.log(typeof curState);
 
-    // when comma (,) is already displayed, don't add up anymore
-    if (num === ',' && input.includes(',')) return;
+    // when dot (.) is already displayed, don't add up anymore
+    if (num === '.' && input.toString().includes('.')) {
+      return;
+    }
 
     curState === 0 ? setCurState(num) : setCurState((prev) => prev + num);
   };
@@ -26,8 +29,6 @@ function App() {
   useEffect(() => {
     curState && setInput(curState);
   }, [curState]);
-
-  // console.log(input.length);
 
   /*******************************
    ***********Calculate***********
@@ -152,6 +153,9 @@ function App() {
     setOperator(null);
   };
 
+  console.log(prevState);
+  console.log(curState);
+
   return (
     <div className="container">
       <div className="wrap">
@@ -214,7 +218,7 @@ function App() {
           0
         </div>
         <div className="btn num" onClick={displayNum}>
-          ,
+          .
         </div>
         <div className="btn orange" onClick={equals}>
           =
