@@ -14,6 +14,7 @@ function App() {
    *******************************/
   const displayNum = (e) => {
     const num = e.target.innerText;
+    // if (input.length > 10) return;
 
     // when comma (,) is already displayed, don't add up anymore
     if (num === ',' && input.includes(',')) return;
@@ -25,6 +26,8 @@ function App() {
   useEffect(() => {
     curState && setInput(curState);
   }, [curState]);
+
+  // console.log(input.length);
 
   /*******************************
    ***********Calculate***********
@@ -114,7 +117,7 @@ function App() {
           return;
         }
         const firstVal = prevNum / curNum;
-        res = firstVal.toFixed(10);
+        res = firstVal.toFixed(6);
         break;
       case 'X':
         res = prevNum * curNum;
